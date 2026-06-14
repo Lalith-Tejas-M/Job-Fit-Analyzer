@@ -1,0 +1,31 @@
+# Python virtual environments
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ML / Torch files / models
+*.pt
+*.pth
+*.bin
+*.dll
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# User uploads / sensitive files
+uploads/
+Backend/data/uploads/
+
+# Local configuration and scratch files
+.env
+scratch/
+test_exec.py
+test_import.py
+*.db
+*.log

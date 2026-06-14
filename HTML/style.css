@@ -1,0 +1,16 @@
+h1{
+    color:blue
+}
+h2{
+    color:darkblue
+}
+body{
+    background-color:pink;
+}
+button{
+    color:white;
+    background-color:rgb(58, 156, 28);
+}
+h2{
+    text-decoration: underline;
+}
