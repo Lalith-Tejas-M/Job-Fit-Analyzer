@@ -75,5 +75,3 @@ Open `Frontend/index.html` or serve the `Frontend/` folder using any local web s
 
 ---
 
-## 🔒 License
-This project is licensed under the MIT License.
