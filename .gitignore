@@ -24,7 +24,6 @@ Backend/data/uploads/
 
 # Local configuration and scratch files
 .env
-scratch/
 test_exec.py
 test_import.py
 *.db
