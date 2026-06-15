@@ -346,18 +346,152 @@ button:hover{
     color: #e0e1dd;
     resize: vertical;
 }
-/* =====  Skill-specific Roadmap Cards  ===== */
+/* =====  Rich Roadmap Cards  ===== */
+.roadmap-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 1.2rem 0 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid rgba(30,136,229,0.2);
+}
+
 .roadmap-card {
-    background: #f8f9fa;
-    border-left: 4px solid #1E88E5;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 4px;
+    background: #1b263b;
+    border: 1px solid #2d3f5c;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 0.9rem 0;
+    animation: fadeSlideUp 0.3s ease both;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.roadmap-card a {
-    color: #1E88E5;
+.roadmap-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.28);
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.roadmap-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.roadmap-skill-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #e0e1dd;
+    margin: 0;
+}
+
+.hours-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #1E88E5, #0D47A1);
+    padding: 0.2rem 0.7rem;
+    border-radius: 50px;
+    white-space: nowrap;
+}
+
+.roadmap-section {
+    margin: 0.7rem 0;
+}
+
+.roadmap-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #8899aa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+
+/* Numbered preparation steps */
+ol.prep-steps {
+    padding-left: 1.3rem;
+    margin: 0;
+}
+ol.prep-steps li {
+    color: #c8d6e5;
+    font-size: 0.87rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.5;
+}
+
+/* Resource groups (docs / courses / practice / video) */
+.resource-group {
+    margin-bottom: 0.5rem;
+}
+.resource-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #7ec8e3;
+    margin-bottom: 0.2rem;
+}
+ul.resource-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul.resource-list li {
+    display: inline-block;
+    margin: 0.15rem 0.4rem 0.15rem 0;
+}
+ul.resource-list a {
+    color: #78c3fb;
+    font-size: 0.83rem;
     text-decoration: none;
+    border-bottom: 1px dashed rgba(120,195,251,0.4);
+    padding-bottom: 1px;
+    transition: color 0.15s, border-color 0.15s;
 }
-.roadmap-card a:hover {
-    text-decoration: underline;
+ul.resource-list a:hover {
+    color: #fff;
+    border-color: #fff;
 }
+
+/* Footer row: project + certificate */
+.roadmap-footer {
+    margin-top: 0.8rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.roadmap-meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.83rem;
+    color: #c8d6e5;
+    flex: 1 1 200px;
+}
+.roadmap-meta strong {
+    color: #e0e1dd;
+}
+
+/* Medium / Long term goal lists */
+ul.roadmap-goals {
+    list-style: none;
+    padding: 0;
+    margin: 0.4rem 0 0.8rem;
+}
+ul.roadmap-goals li {
+    color: #c8d6e5;
+    font-size: 0.9rem;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    line-height: 1.5;
+}
+ul.roadmap-goals li:last-child {
+    border-bottom: none;
+}

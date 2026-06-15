@@ -325,136 +325,97 @@ async function runAnalysis() {
 }
 
 // ------------------------------------------------------------------
-//  NEW :  Skill-specific roadmap renderer  (one card per missing skill)
+//  RICH ROADMAP RENDERER  (Fix 3: steps + curated resources per skill)
 // ------------------------------------------------------------------
-const SKILL_GUIDE = {
-    "Docker": {
-        videos: ["https://www.youtube.com/watch?v=zJ6WbK9zFpI", "https://www.youtube.com/watch?v=PgTzP9pkaQA"],
-        hours: 6,
-        project: "Build a multi-container Node+Postgres app",
-        certificate: "Docker Certified Associate"
-    },
-    "Kubernetes": {
-        videos: ["https://www.youtube.com/watch?v=X48VuDVv0do", "https://www.youtube.com/watch?v=s_o8dwzR6p4"],
-        hours: 10,
-        project: "Deploy micro-services on minikube with auto-scaling",
-        certificate: "CKAD"
-    },
-    "AWS": {
-        videos: ["https://www.youtube.com/watch?v=3hLmDS179YE", "https://www.youtube.com/watch?v=Z027y5mxaHY"],
-        hours: 15,
-        project: "Host a static site + CI/CD pipeline",
-        certificate: "AWS Cloud Practitioner"
-    },
-    "Python": {
-        videos: ["https://www.youtube.com/watch?v=rfscVS0vtbw", "https://www.youtube.com/watch?v=7lmCu8wz8ro"],
-        hours: 20,
-        project: "Automate a daily report with pandas + e-mail",
-        certificate: "PCAP – Certified Associate"
-    },
-    "Machine Learning": {
-        videos: ["https://www.youtube.com/watch?v=7eh4d6sAB6A", "https://www.youtube.com/watch?v=NWONeJYa6rM"],
-        hours: 25,
-        project: "End-to-end churn prediction API with Flask",
-        certificate: "TensorFlow Developer Cert"
-    },
-    "SQL": {
-        videos: ["https://www.youtube.com/watch?v=HXV3zeQKqGY", "https://www.youtube.com/watch?v=9S8z8S0hw8w"],
-        hours: 8,
-        project: "Design & query a Netflix-style DB",
-        certificate: "Oracle SQL Certified"
-    },
-    "React": {
-        videos: ["https://www.youtube.com/watch?v=bMknfKXIFA8", "https://www.youtube.com/watch?v=TiSGujMifOI"],
-        hours: 12,
-        project: "Todo-app + unit tests + CI deploy",
-        certificate: "React Developer Cert"
-    },
-    "Node.js": {
-        videos: ["https://www.youtube.com/watch?v=TlB_eWDSMt4", "https://www.youtube.com/watch?v=Oe421EPjeBE"],
-        hours: 10,
-        project: "REST API with auth + Swagger docs",
-        certificate: "OpenJS Node.js Services Cert"
-    },
-    "Figma": {
-        videos: ["https://www.youtube.com/watch?v=FTFaQWZBqQ8"],
-        hours: 4,
-        project: "Design a 5-screen mobile app",
-        certificate: "Figma Skill Certificate"
-    },
-    "Git": {
-        videos: ["https://www.youtube.com/watch?v=SWYqp7iY_Tc"],
-        hours: 3,
-        project: "Contribute to an open-source repo",
-        certificate: "GitHub Foundations"
-    },
-    "JavaScript": {
-        videos: ["https://www.youtube.com/watch?v=W6NZfCO5SIk"],
-        hours: 8,
-        project: "Build a weather dashboard with fetch API",
-        certificate: "JavaScript Algorithms & Data Structures"
-    },
-    "CSS": {
-        videos: ["https://www.youtube.com/watch?v=yfoY53QXElI"],
-        hours: 4,
-        project: "Clone a landing page pixel-perfect",
-        certificate: "CSS Specialist"
-    },
-    "HTML": {
-        videos: ["https://www.youtube.com/watch?v=pQN-pnXPaVg"],
-        hours: 2,
-        project: "Build accessible semantic pages",
-        certificate: "HTML5 Specialist"
-    }
-    // Add more skills here – if not listed, the fallback below will auto-create a card
-};
 
+const RESOURCE_ICONS = {
+    docs:     '📖',
+    course:   '🎓',
+    practice: '🔨',
+    video:    '▶',
+};
 
 function renderRoadmap(rec) {
     let html = '';
 
-    // 1.  SHORT TERM  – one card per **missing skill**
-    html += '<h4>Short-term (1-3 months)</h4>';
-    if (!rec.short_term.length) {
+    // ── SHORT TERM — one card per missing skill ──────────────────────────────
+    html += '<h4 class="roadmap-section-title">🚀 Short-term Learning Path (1–3 months)</h4>';
+
+    if (!rec.short_term || !rec.short_term.length) {
         html += '<p>No specific learning path available.</p>';
     } else {
-        rec.short_term.forEach(item => {
-            const guide = SKILL_GUIDE[item.skill];
-            if (guide) {                                           // curated path
-                html += `
-                <div class="roadmap-card">
-                  <h5>${item.skill}</h5>
-                  <p><strong>Est. hours:</strong> ${guide.hours}</p>
-                  <p><strong>Project:</strong> ${guide.project}</p>
-                  <p><strong>Certificate:</strong> ${guide.certificate}</p>
-                  <p><strong>Videos:</strong></p>
-                  <ul>
-                    ${guide.videos.map(v => `<li><a href="${v}" target="_blank">▶ Watch</a></li>`).join('')}
-                  </ul>
-                </div>`;
-            } else {                                               // generic fallback
-                const query = encodeURIComponent(item.skill + ' tutorial');
-                html += `
-                <div class="roadmap-card">
-                  <h5>${item.skill}</h5>
-                  <p>No curated path yet – start here:</p>
-                  <ul>
-                    <li><a href="https://www.youtube.com/results?search_query=${query}" target="_blank">YouTube</a></li>
-                    <li><a href="https://www.google.com/search?q=${query}" target="_blank">Google</a></li>
-                  </ul>
-                </div>`;
-            }
+        rec.short_term.forEach((item, idx) => {
+            const hours       = item.hours || 10;
+            const steps       = Array.isArray(item.steps) ? item.steps : [];
+            const resources   = Array.isArray(item.resources) ? item.resources : [];
+            const project     = item.project || '';
+            const certificate = item.certificate || '';
+
+            // Group resources by type
+            const grouped = {};
+            resources.forEach(r => {
+                const t = r.type || 'other';
+                if (!grouped[t]) grouped[t] = [];
+                grouped[t].push(r);
+            });
+
+            // Build resources HTML
+            let resHtml = '';
+            const order = ['docs', 'course', 'practice', 'video'];
+            order.forEach(type => {
+                if (!grouped[type] || !grouped[type].length) return;
+                const icon  = RESOURCE_ICONS[type] || '🔗';
+                const label = type === 'docs' ? 'Documentation' :
+                              type === 'course' ? 'Courses' :
+                              type === 'practice' ? 'Practice' : 'Video Tutorials';
+                resHtml += `<div class="resource-group">`;
+                resHtml += `<span class="resource-label">${icon} ${label}</span><ul class="resource-list">`;
+                grouped[type].forEach(r => {
+                    resHtml += `<li><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a></li>`;
+                });
+                resHtml += `</ul></div>`;
+            });
+
+            // Build step list HTML
+            const stepsHtml = steps.length
+                ? '<ol class="prep-steps">' + steps.map(s => `<li>${s}</li>`).join('') + '</ol>'
+                : '<p style="color:var(--text-muted)">Follow the resources below to get started.</p>';
+
+            html += `
+            <div class="roadmap-card" style="animation-delay:${idx * 0.08}s">
+              <div class="roadmap-card-header">
+                <h5 class="roadmap-skill-name">🎯 ${item.skill}</h5>
+                <span class="hours-badge">⏱ ${hours}h est.</span>
+              </div>
+
+              <div class="roadmap-section">
+                <p class="roadmap-label">📋 Preparation Steps</p>
+                ${stepsHtml}
+              </div>
+
+              ${resHtml ? `<div class="roadmap-section"><p class="roadmap-label">📚 Learning Resources</p>${resHtml}</div>` : ''}
+
+              <div class="roadmap-footer">
+                ${project ? `<div class="roadmap-meta"><span>🔨</span><span><strong>Project:</strong> ${project}</span></div>` : ''}
+                ${certificate ? `<div class="roadmap-meta"><span>🏅</span><span><strong>Certificate:</strong> ${certificate}</span></div>` : ''}
+              </div>
+            </div>`;
         });
     }
 
-    // 2.  MEDIUM / LONG  (simple bullets)
-    html += '<h4>Medium-term (3-6 months)</h4><ul>';
-    rec.medium_term.forEach(m => html += `<li>${m}</li>`);
-    html += '</ul>';
+    // ── MEDIUM TERM ─────────────────────────────────────────────────────────
+    if (rec.medium_term && rec.medium_term.length) {
+        html += '<h4 class="roadmap-section-title" style="margin-top:1.5rem">📈 Medium-term Goals (3–6 months)</h4><ul class="roadmap-goals">';
+        rec.medium_term.forEach(m => html += `<li>✅ ${m}</li>`);
+        html += '</ul>';
+    }
 
-    html += '<h4>Long-term (6-12 months)</h4><ul>';
-    rec.long_term.forEach(l => html += `<li>${l}</li>`);
-    html += '</ul>';
+    // ── LONG TERM ────────────────────────────────────────────────────────────
+    if (rec.long_term && rec.long_term.length) {
+        html += '<h4 class="roadmap-section-title" style="margin-top:1.5rem">🏆 Long-term Vision (6–12 months)</h4><ul class="roadmap-goals">';
+        rec.long_term.forEach(l => html += `<li>🌟 ${l}</li>`);
+        html += '</ul>';
+    }
 
     return html;
 }
