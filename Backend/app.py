@@ -1,5 +1,5 @@
 # backend/app.py
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 import sys
@@ -45,15 +45,9 @@ app.register_blueprint(settings.bp,       url_prefix='/api')
 app.register_blueprint(resume_review.bp,  url_prefix='/api')
 
 # ------------------------------------------------------------------
-# Serve static frontend files (localhost only)
+# Frontend is now served by Next.js on port 3000 (npm run dev)
+# This Flask server only handles /api/* routes
 # ------------------------------------------------------------------
-@app.route('/')
-def serve_frontend():
-    return send_from_directory('../Frontend', 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('../Frontend', path)
 
 # ------------------------------------------------------------------
 # Health check — lets frontend detect when models are fully loaded
