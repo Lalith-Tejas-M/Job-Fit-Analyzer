@@ -1,5 +1,5 @@
-// All API calls — mirrors the exact endpoints in the Flask backend
-const API = '/api';  // proxied by next.config.js → http://localhost:5000/api
+// All API calls hit the Flask backend directly (since Flask has CORS enabled)
+const API = 'http://127.0.0.1:5000/api';
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 export async function apiLogin(email: string, password: string) {

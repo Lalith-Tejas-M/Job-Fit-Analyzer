@@ -99,13 +99,14 @@ export default function UploadPage() {
         setMessage(data.error ?? 'Upload failed.');
       }
     } catch (err: any) {
+      console.error("Upload error:", err);
       clearTimeout(timeoutId);
       stopLoadingMessages();
       setStatus('error');
       if (err?.name === 'AbortError') {
         setMessage('⏱️ Request timed out. The AI model is slow on CPU. Please try again.');
       } else {
-        setMessage('❌ Upload failed. Make sure the backend server is running on port 5000.');
+        setMessage(`❌ Upload failed: ${err?.message || 'Unknown error'}. Make sure the backend server is running on port 5000.`);
       }
     }
   };

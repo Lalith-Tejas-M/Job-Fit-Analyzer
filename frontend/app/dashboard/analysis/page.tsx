@@ -166,8 +166,9 @@ export default function AnalysisPage() {
       } else {
         setError(data.error ?? 'Analysis failed.');
       }
-    } catch {
-      setError('Analysis failed. Make sure the backend is running on port 5000.');
+    } catch (err: any) {
+      console.error("Analysis error:", err);
+      setError(`Analysis failed: ${err?.message || 'Network error'}. Ensure backend is running.`);
     } finally {
       setLoading(false);
     }

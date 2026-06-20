@@ -89,35 +89,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User + Logout */}
-      <div className="px-3 py-4 border-t border-white/10">
-        <AnimatePresence>
-          {!collapsed && user && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="px-3 py-2 mb-2"
-            >
-              <div className="text-xs text-slate-500">Signed in as</div>
-              <div className="text-sm text-white font-medium truncate">{user.name}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <button
-          onClick={logout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
-        >
-          <LogOut size={18} className="flex-shrink-0" />
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-medium">
-                Logout
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
-      </div>
+
 
       {/* Collapse toggle */}
       <button
